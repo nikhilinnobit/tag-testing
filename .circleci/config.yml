@@ -8,12 +8,12 @@ orbs:
 workflows:
   build_and_push_image:
     jobs:
+      - build:
+          steps:
+            - run: 
+                name: env
+                command: ls
       - aws-ecr/build-and-push-image:
-      - run:
-          name: env
-          command: |
-            echo "COMMIT_ID=$(git rev-list --tags --date-order | head -1)" >> $BASH_ENV
-            echo "TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')" >> $BASH_ENV
           account-url: AWS_ECR_ACCOUNT_URL
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
@@ -27,3 +27,4 @@ workflows:
           filters:
            branches:
              only: main
+        
