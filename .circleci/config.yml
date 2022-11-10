@@ -6,7 +6,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: "cimg/base:stable"
+      - image: "cimg/base:2021.04"
     steps:
       - run: 
          name: env
