@@ -8,6 +8,11 @@ orbs:
 workflows:
   build_and_push_image:
     jobs:
+      - run:
+          name: env
+          command: |
+            echo "COMMIT_ID=$(git rev-list --tags --date-order | head -1)" >> $BASH_ENV
+            echo "TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')" >> $BASH_ENV
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           aws-access-key-id: AWS_ACCESS_KEY_ID
@@ -18,7 +23,7 @@ workflows:
           profile-name: default
           region: AWS_DEFAULT_REGION
           repo: backend
-          tag: "latest,$CIRCLE_SHA1,$pipeline.git.tag"
+          tag: "latest,$CIRCLE_SHA1,$TAG"
           filters:
            branches:
              only: main
