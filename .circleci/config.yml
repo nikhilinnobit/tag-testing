@@ -17,7 +17,7 @@ jobs:
 workflows:
   build_and_push_image:
     jobs:
-      
+      - run: echo "export DATE_TAG=`date +%Y%m%d%H%M%S`" >> $BASH_ENV 
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           aws-access-key-id: AWS_ACCESS_KEY_ID
@@ -28,7 +28,7 @@ workflows:
           profile-name: default
           region: AWS_DEFAULT_REGION
           repo: backend
-          tag: "latest,$CIRCLE_SHA1,$increment_tag"
+          tag: "latest,$CIRCLE_SHA1,$DATE_TAG"
           filters:
            tags:
              only: /.*/
