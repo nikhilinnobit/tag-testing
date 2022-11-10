@@ -8,12 +8,12 @@ jobs:
     docker:
       - image: "cimg/base:stable"
     steps:
-      - run:
-          name: Build image
-          command: |
-              COMMIT_ID=$(git rev-list --tags --date-order | head -1)
-              TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')H_ENV
-
+      - run: 
+         name: env
+         command: |
+            echo "export COMMIT_ID=$(git rev-list --tags --date-order | head -1)" >> $BASH_ENV
+            echo "export TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')" >> $BASH_ENV
+            echo $TAG
 workflows:
   build_and_push_image:
     jobs:
@@ -28,7 +28,7 @@ workflows:
           profile-name: default
           region: AWS_DEFAULT_REGION
           repo: backend
-          tag: "latest,$TAG"
+          tag: "latest,$CIRCLE_SHA1,$increment_tag"
           filters:
            tags:
              only: /.*/
