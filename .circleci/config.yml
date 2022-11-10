@@ -28,7 +28,7 @@ workflows:
           profile-name: default
           region: AWS_DEFAULT_REGION
           repo: backend
-          tag: "latest,$CIRCLE_SHA1,$CIRCLE_TAG"
+          tag: "latest,$CIRCLE_SHA1,$increment_tag"
           filters:
            tags:
              only: /.*/
