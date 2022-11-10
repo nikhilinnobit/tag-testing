@@ -15,6 +15,7 @@ workflows:
           create-repo: true
           dockerfile: build/Dockerfile
           path: .
+          profile-name: default
           region: AWS_REGION
           repo: backend
           tag: "latest,$CIRCLE_SHA1"
