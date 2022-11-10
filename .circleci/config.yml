@@ -11,8 +11,8 @@ jobs:
       - run: 
          name: env
          command: |
-            COMMIT_ID=$(git rev-list --tags --date-order | head -1)
-            TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')
+            echo "export COMMIT_ID=$(git rev-list --tags --date-order | head -1)" >> $BASH_ENV
+            echo "export TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')" >> $BASH_ENV
 
 workflows:
   build_and_push_image:
