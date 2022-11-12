@@ -14,7 +14,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          docker_layer_caching: true
+          #docker_layer_caching: true
       - aws-cli/install
       - aws-cli/setup
       - run:
@@ -34,8 +34,8 @@ jobs:
           command: |
             docker images
             aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
-            docker tag backend:latest ${AWS_ECR_ACCOUNT_URL}/backend:latest
-            docker push ${AWS_ECR_ACCOUNT_URL}/backend:latest
+            #docker tag backend:latest ${AWS_ECR_ACCOUNT_URL}/backend:latest
+            #docker push ${AWS_ECR_ACCOUNT_URL}/backend:latest
             
    
 workflows:
