@@ -1,36 +1,46 @@
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@7.0.0
-  aws-cli: circleci/aws-cli@2.0.0
+  aws-ecr: circleci/aws-ecr@8.1.3
+  #https://circleci.com/developer/orbs/orb/circleci/aws-cli
+  aws-cli: circleci/aws-cli@3.1.3
+
 jobs:
   build:
+#    working_directory: /app
     docker:
-      - image: "cimg/base:2021.04"
+#      - image: docker:20.10.21-git
+      - image: "cimg/base:stable"
     steps:
-      - run: 
-         name: env
-         command: |
-            echo "export COMMIT_ID=$(git rev-list --tags --date-order | head -1)" >> $BASH_ENV
-            echo "export TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')" >> $BASH_ENV
-            echo $TAG
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - aws-cli/install
+      - aws-cli/setup
+      - run:
+          name: Setup VirtualEnv
+          command: |
+            echo 'export IMAGE_NAME=hello-docker' >> $BASH_ENV 
+      
+      - run:
+          name: Build image
+          command: |
+              # COMMIT_ID=$(git rev-list --tags --date-order | head -1)
+              # TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')
+              docker build -t backend:latest -f build/Dockerfile .
+              
+      - run:        
+          name: push
+          command: |
+            docker images
+            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
+            docker tag backend:latest ${AWS_ECR_ACCOUNT_URL}/backend:latest
+            docker push ${AWS_ECR_ACCOUNT_URL}/backend:latest
+            
+   
 workflows:
   build_and_push_image:
     jobs:
-      - run: echo "export DATE_TAG=`date +%Y%m%d%H%M%S`" >> $BASH_ENV 
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ECR_ACCOUNT_URL
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          create-repo: true
-          dockerfile: build/Dockerfile
-          path: .
-          profile-name: default
-          region: AWS_DEFAULT_REGION
-          repo: backend
-          tag: "latest,$CIRCLE_SHA1,$DATE_TAG"
-          filters:
-           tags:
-             only: /.*/
       - build
-        
+
+      #####
