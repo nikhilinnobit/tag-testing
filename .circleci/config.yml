@@ -11,7 +11,8 @@ jobs:
 #    working_directory: /app
     docker:
 #      - image: docker:20.10.21-git
-      - image: "cimg/base:stable"
+      #- image: "cimg/base:stable"
+      - image: circleci/golang:1.8
     steps:
       - checkout
       - setup_remote_docker:
