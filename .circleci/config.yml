@@ -29,6 +29,12 @@ jobs:
               echo 'export COMMIT_ID=$(git rev-list --tags --date-order | head -1)' >> "$BASH_ENV"
               echo 'export TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')' >> "$BASH_ENV"
               docker build -t backend:$TAG -f build/Dockerfile .
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get github.com/tcnksm/ghr
+            VERSION=$(my-binary --version)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
               
       - run:        
           name: push
