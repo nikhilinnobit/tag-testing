@@ -36,7 +36,7 @@ jobs:
             aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 197240313557.dkr.ecr.eu-north-1.amazonaws.com
             #aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
             docker tag backend:latest ${AWS_ECR_ACCOUNT_URL}/backend:latest
-            #docker push ${AWS_ECR_ACCOUNT_URL}/backend:latest
+            docker push ${AWS_ECR_ACCOUNT_URL}/backend:latest
             
    
 workflows:
