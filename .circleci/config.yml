@@ -28,7 +28,7 @@ jobs:
           command: |
               #echo 'export COMMIT_ID=$(git rev-list --tags --date-order | head -1)' >> "$BASH_ENV"
               #echo 'export TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')' >> "$BASH_ENV"
-              docker build -t backend:$TAG -f build/Dockerfile .
+              docker build -t backend:latest -f build/Dockerfile .
       - run:
           name: "Publish Release on GitHub"
           command: |
