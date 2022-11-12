@@ -25,9 +25,9 @@ jobs:
       - run:
           name: Build image
           command: |
-              # COMMIT_ID=$(git rev-list --tags --date-order | head -1)
-              # TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')
-              docker build -t backend:latest -f build/Dockerfile .
+              COMMIT_ID=$(git rev-list --tags --date-order | head -1)
+              TAG=$(git show-ref --tags | grep $COMMIT_ID | awk -F / '{print $NF}')
+              docker build -t backend:$TAG -f build/Dockerfile .
               
       - run:        
           name: push
